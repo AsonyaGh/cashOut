@@ -40,14 +40,22 @@ const pickField = (payload, keys) => {
   return '';
 };
 
-const ussdResponse = (text) => ({
+const ussdResponse = (text) => {
+  const isContinue = text.startsWith('CON ');
+  const message = text.replace(/^CON\s|^END\s/, '');
+
+  return {
   statusCode: 200,
   headers: {
-    'Content-Type': 'text/plain; charset=utf-8',
+    'Content-Type': 'application/json; charset=utf-8',
     'Cache-Control': 'no-store'
   },
-  body: text
-});
+    body: JSON.stringify({
+      continueSession: isContinue,
+      message
+    })
+  };
+};
 
 const getSteps = (text) =>
   normalize(text)
