@@ -1,17 +1,16 @@
-
 import { initializeApp } from "firebase/app";
 import { getFirestore, doc, collection, getDoc, setDoc, addDoc } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { AppUser, SystemConfig, UserRole } from '../types';
 
 export const firebaseConfig = {
-  apiKey: "AIzaSyB1egjpuy7TRjIaHNt8k5BPXIg20JmpsJE",
-  authDomain: "home-radio-cashout.firebaseapp.com",
-  projectId: "home-radio-cashout",
-  storageBucket: "home-radio-cashout.firebasestorage.app",
-  messagingSenderId: "762892192912",
-  appId: "1:762892192912:web:25d6d8edd373140bdf9c15",
-  measurementId: "G-86SWL6FN2T"
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "",
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || "",
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || "",
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || "",
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "",
+  appId: import.meta.env.VITE_FIREBASE_APP_ID || "",
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID || ""
 };
 
 const app = initializeApp(firebaseConfig);

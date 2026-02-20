@@ -10,11 +10,22 @@ View your app in AI Studio: https://ai.studio/apps/drive/1XcGnyZ0KyT8CtSFC9Bfga1
 
 ## Run Locally
 
-**Prerequisites:**  Node.js
-
+**Prerequisites:** Node.js
 
 1. Install dependencies:
    `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
+2. Set these values in `.env.local`:
+   - `GEMINI_API_KEY`
+   - `VITE_FIREBASE_API_KEY`
+   - `VITE_FIREBASE_AUTH_DOMAIN`
+   - `VITE_FIREBASE_PROJECT_ID`
+   - `VITE_FIREBASE_STORAGE_BUCKET`
+   - `VITE_FIREBASE_MESSAGING_SENDER_ID`
+   - `VITE_FIREBASE_APP_ID`
+   - `VITE_FIREBASE_MEASUREMENT_ID`
 3. Run the app:
    `npm run dev`
+
+## Netlify
+
+Set the same `VITE_FIREBASE_*` and `GEMINI_API_KEY` environment variables in Netlify (Site settings -> Environment variables) before deploying.
