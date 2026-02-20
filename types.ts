@@ -57,3 +57,21 @@ export interface AuditLog {
   details: string;
   adminId?: string;
 }
+
+export enum UserRole {
+  ADMIN = 'ADMIN',
+  STATION_ADMIN = 'STATION_ADMIN',
+  FINANCE_OFFICER = 'FINANCE_OFFICER',
+  OVERSIGHT_OFFICER = 'OVERSIGHT_OFFICER'
+}
+
+export interface AppUser {
+  uid: string;
+  email: string;
+  displayName: string;
+  role: UserRole;
+  active: boolean;
+  createdAt: number;
+  updatedAt: number;
+  createdBy?: string;
+}
