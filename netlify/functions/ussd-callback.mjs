@@ -40,17 +40,20 @@ const pickField = (payload, keys) => {
   return '';
 };
 
-const ussdResponse = (text) => {
+const ussdResponse = (text, meta) => {
   const isContinue = text.startsWith('CON ');
   const message = text.replace(/^CON\s|^END\s/, '');
 
   return {
-  statusCode: 200,
-  headers: {
-    'Content-Type': 'application/json; charset=utf-8',
-    'Cache-Control': 'no-store'
-  },
+    statusCode: 200,
+    headers: {
+      'Content-Type': 'application/json; charset=utf-8',
+      'Cache-Control': 'no-store'
+    },
     body: JSON.stringify({
+      sessionID: meta.sessionID,
+      UserID: meta.userID,
+      msisdn: meta.msisdn,
       continueSession: isContinue,
       message
     })
@@ -106,9 +109,10 @@ export const handler = async (event) => {
   }
 
   const payload = parseBody(event);
-  const sessionId = pickField(payload, ['sessionId', 'session_id', 'SessionId']);
-  const phone = pickField(payload, ['phoneNumber', 'phone', 'msisdn', 'MSISDN']);
-  const text = pickField(payload, ['text', 'input', 'ussdString', 'message']);
+  const sessionId = pickField(payload, ['sessionID', 'sessionId', 'session_id', 'SessionId']);
+  const phone = pickField(payload, ['msisdn', 'MSISDN', 'phoneNumber', 'phone']);
+  const userId = pickField(payload, ['UserID', 'userID', 'userId', 'userid']) || phone;
+  const text = pickField(payload, ['text', 'input', 'ussdString', 'message', 'INPUT']);
 
   const responseText = handleFlow(getSteps(text));
 
@@ -119,5 +123,9 @@ export const handler = async (event) => {
     responseType: responseText.slice(0, 3)
   });
 
-  return ussdResponse(responseText);
+  return ussdResponse(responseText, {
+    sessionID: sessionId,
+    userID: userId,
+    msisdn: phone
+  });
 };
