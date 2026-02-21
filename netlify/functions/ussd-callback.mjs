@@ -32,6 +32,11 @@ const parseBody = (event) => {
   }
 };
 
+const parseQuery = (event) => {
+  const qs = event.queryStringParameters || {};
+  return typeof qs === 'object' && qs !== null ? qs : {};
+};
+
 const pickField = (payload, keys) => {
   for (const key of keys) {
     const value = normalize(payload?.[key]);
@@ -53,8 +58,9 @@ const ussdResponse = (text, meta) => {
     body: JSON.stringify({
       sessionID: meta.sessionID,
       UserID: meta.userID,
+      userID: meta.userID,
       msisdn: meta.msisdn,
-      continueSession: isContinue,
+      continueSession: isContinue ? "true" : "false",
       message
     })
   };
@@ -104,15 +110,15 @@ If successful, your ticket will be entered into the current draw.`;
 };
 
 export const handler = async (event) => {
-  if (event.httpMethod !== 'POST') {
+  if (!['POST', 'GET'].includes(event.httpMethod || '')) {
     return { statusCode: 405, body: 'Method Not Allowed' };
   }
 
-  const payload = parseBody(event);
-  const sessionId = pickField(payload, ['sessionID', 'sessionId', 'session_id', 'SessionId']);
+  const payload = { ...parseQuery(event), ...parseBody(event) };
+  const sessionId = pickField(payload, ['sessionID', 'SESSIONID', 'sessionId', 'session_id', 'SessionId']);
   const phone = pickField(payload, ['msisdn', 'MSISDN', 'phoneNumber', 'phone']);
-  const userId = pickField(payload, ['UserID', 'userID', 'userId', 'userid']) || phone;
-  const text = pickField(payload, ['text', 'input', 'ussdString', 'message', 'INPUT']);
+  const userId = pickField(payload, ['UserID', 'USERID', 'userID', 'userId', 'userid']) || phone;
+  const text = pickField(payload, ['userData', 'USERDATA', 'text', 'input', 'ussdString', 'message', 'INPUT']);
 
   const responseText = handleFlow(getSteps(text));
 
