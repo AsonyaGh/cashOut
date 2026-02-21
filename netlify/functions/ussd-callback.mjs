@@ -60,14 +60,29 @@ const ussdResponse = (text, meta) => {
       UserID: meta.userID,
       userID: meta.userID,
       msisdn: meta.msisdn,
-      continueSession: isContinue ? "true" : "false",
+      continueSession: isContinue,
       message
     })
   };
 };
 
+const normalizeUssdText = (text) => {
+  let t = normalize(text)
+    .replace(/[＃]/g, '#')
+    .replace(/[＊]/g, '*')
+    .replace(/\s+/g, '');
+
+  // Arkesel can send the full dial string (e.g. *928*301# or *928*301#*1).
+  // Only parse user selections after the trailing "#".
+  if (t.includes('#')) {
+    t = t.slice(t.lastIndexOf('#') + 1);
+  }
+
+  return t;
+};
+
 const getSteps = (text) =>
-  normalize(text)
+  normalizeUssdText(text)
     .split('*')
     .map((s) => s.trim())
     .filter(Boolean);
