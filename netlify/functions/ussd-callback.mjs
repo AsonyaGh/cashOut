@@ -91,7 +91,7 @@ const ussdResponse = (text, meta) => {
       UserID: meta.userID || meta.msisdn || "",
       msisdn: meta.msisdn || "",
       message,
-      continueSession: isContinue
+      continueSession: isContinue ? "true" : "false"
     })
   };
 };
