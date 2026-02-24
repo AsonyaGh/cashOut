@@ -89,6 +89,7 @@ const ussdResponse = (text, meta) => {
     body: JSON.stringify({
       sessionID: meta.sessionID || "",
       UserID: meta.userID || meta.msisdn || "",
+      userID: meta.userID || meta.msisdn || "",
       msisdn: meta.msisdn || "",
       message,
       continueSession: isContinue ? "true" : "false"
